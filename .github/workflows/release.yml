@@ -3,12 +3,20 @@ name: Release
 on:
   push:
     tags: ["v*"]
+  # Re-publish an existing tag to npm only (for example after fixing trusted publishing). npm's trusted
+  # publisher is bound to this file, so retries must run here rather than in a separate workflow.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing release tag to publish to npm, for example v0.2.1
+        required: true
 
 permissions:
   contents: read
 
 jobs:
   build:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -78,16 +86,19 @@ jobs:
   # release.yml as its trusted publisher on npmjs.com; npm adds provenance automatically.
   npm:
     needs: build
+    if: always() && (needs.build.result == 'success' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.tag || github.ref }}
+      # No registry-url: setup-node would write a placeholder token that npm prefers over OIDC.
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
       - name: Use an npm with trusted publishing (11.5.1 or later)
         run: npm install -g npm@^11.5.1 && npm --version
       - name: Publish kwazi and kwazi-widget
@@ -100,14 +111,14 @@ jobs:
               if npm view "$name@$version" version >/dev/null 2>&1; then
                 echo "::notice::$name@$version is already on npm"
               else
-                npm ci && npm run build && npm publish --access public
+                npm ci && npm run build && npm publish --access public --loglevel verbose
               fi
             )
           done
 
   pypi:
     needs: build
-    if: vars.PYPI_PUBLISH == 'true'
+    if: github.event_name == 'push' && vars.PYPI_PUBLISH == 'true'
     runs-on: ubuntu-latest
     environment: pypi
     permissions:
