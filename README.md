@@ -44,7 +44,7 @@ Questions use the credits of the account that owns the key. You are responsible 
 
 ## Releasing
 
-Tag `vX.Y.Z` to build every package, attach the npm tarballs, Python wheel and jars to a GitHub Release, publish the jar to GitHub Packages and serve it through JitPack. npm and PyPI publishing switch on when the `NPM_TOKEN` secret and the `PYPI_PUBLISH=true` variable (with a PyPI trusted publisher for `release.yml`) are set.
+Tag `vX.Y.Z` to build every package, attach the npm tarballs, Python wheel and jars to a GitHub Release, publish the jar to GitHub Packages and serve it through JitPack. npm and PyPI publish through trusted publishing (OIDC), so no registry token is stored: each npm package and the PyPI project list `kvra-global/kwazi-sdk` and `release.yml` as their trusted publisher. PyPI publishing also needs the `PYPI_PUBLISH=true` variable.
 
 ## Licence
 

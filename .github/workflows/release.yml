@@ -74,27 +74,36 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  # npm trusted publishing (OIDC): no token is stored anywhere. Each package lists this repository and
+  # release.yml as its trusted publisher on npmjs.com; npm adds provenance automatically.
   npm:
     needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
-    env:
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 22
+          node-version: 24
           registry-url: https://registry.npmjs.org
-      - name: Publish to npm with provenance
-        if: env.NODE_AUTH_TOKEN != ''
+      - name: Use an npm with trusted publishing (11.5.1 or later)
+        run: npm install -g npm@^11.5.1 && npm --version
+      - name: Publish kwazi and kwazi-widget
         run: |
-          for package in node widget; do (cd packages/$package && npm ci && npm run build && npm publish --provenance --access public); done
-      - name: npm publishing is off
-        if: env.NODE_AUTH_TOKEN == ''
-        run: echo "::notice::Set the NPM_TOKEN secret to publish kwazi and kwazi-widget to npm."
+          for package in node widget; do
+            (
+              cd packages/$package
+              name=$(node -p 'require("./package.json").name')
+              version=$(node -p 'require("./package.json").version')
+              if npm view "$name@$version" version >/dev/null 2>&1; then
+                echo "::notice::$name@$version is already on npm"
+              else
+                npm ci && npm run build && npm publish --access public
+              fi
+            )
+          done
 
   pypi:
     needs: build
