@@ -89,6 +89,10 @@ public final class Kwazi {
             String model,
             boolean safe) {}
 
+    /** Your plan's limits; credits limit is null when unlimited. */
+    public record Usage(String tier, int keys, int sources, int perMinute, int perKeyDaily,
+            int keyRequestsToday, int sourcesUsed, String creditsKind, Integer creditsLimit, int creditsUsed, String day) {}
+
     public record WidgetSession(String token, String expiresAt, String grade, String subject) {}
 
     public record Attachment(String mediaType, String data, String name) {
@@ -179,11 +183,22 @@ public final class Kwazi {
         return new WidgetSession(str(map.get("token")), str(map.get("expiresAt")), str(map.get("grade")), str(map.get("subject")));
     }
 
+    /** Your plan's limits and what this key has used today. */
+    public Usage usage() {
+        Map<String, Object> map = asMap(request("GET", "/v1/usage", null));
+        Map<String, Object> limits = asMap(map.get("limits"));
+        Map<String, Object> credits = asMap(map.get("credits"));
+        Object limit = credits.get("limit");
+        return new Usage(str(limits.get("tier")), integer(limits.get("keys")), integer(limits.get("sources")), integer(limits.get("perMinute")),
+                integer(limits.get("perKeyDaily")), integer(map.get("keyRequestsToday")), integer(map.get("sourcesUsed")), str(credits.get("kind")),
+                limit instanceof Number number ? number.intValue() : null, integer(credits.get("used")), str(map.get("day")));
+    }
+
     private Object request(String method, String path, Map<String, Object> body) {
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put("Authorization", "Bearer " + apiKey);
         headers.put("Accept", "application/json");
-        headers.put("User-Agent", "kwazi-java/0.1.0");
+        headers.put("User-Agent", "kwazi-java/0.2.0");
         String payload = null;
         if (body != null) {
             headers.put("Content-Type", "application/json");

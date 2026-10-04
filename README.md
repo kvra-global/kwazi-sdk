@@ -7,9 +7,9 @@ Bring [Kwazi](https://kwazi.kvra.co.za)'s step-by-step tutoring into your school
 | Package | Install | Folder |
 | --- | --- | --- |
 | Chat widget | `<script src="https://kvra-global.github.io/kwazi-sdk/widget/kwazi-widget.js">` or npm `kwazi-widget` | [`packages/widget`](packages/widget) |
-| Node.js | `npm install https://github.com/kvra-global/kwazi-sdk/releases/download/v0.1.0/kwazi-0.1.0.tgz` (npm `kwazi`) | [`packages/node`](packages/node) |
-| Python | `pip install https://github.com/kvra-global/kwazi-sdk/releases/download/v0.1.0/kwazi-0.1.0-py3-none-any.whl` (PyPI `kwazi`) | [`packages/python`](packages/python) |
-| Gradle | `implementation("com.github.kvra-global:kwazi-sdk:v0.1.0")` from JitPack | [`packages/gradle`](packages/gradle) |
+| Node.js | `npm install https://github.com/kvra-global/kwazi-sdk/releases/download/v0.2.0/kwazi-0.2.0.tgz` (npm `kwazi`) | [`packages/node`](packages/node) |
+| Python | `pip install https://github.com/kvra-global/kwazi-sdk/releases/download/v0.2.0/kwazi-0.2.0-py3-none-any.whl` (PyPI `kwazi`) | [`packages/python`](packages/python) |
+| Gradle | `implementation("com.github.kvra-global:kwazi-sdk:v0.2.0")` from JitPack | [`packages/gradle`](packages/gradle) |
 
 The API is described in [`openapi.json`](openapi.json), generated from the same contracts the API validates with.
 
@@ -26,6 +26,17 @@ const kwazi = new Kwazi(); // reads KWAZI_API_KEY
 const notes = await kwazi.sources.create({ url: "https://your-school.example/fractions.pdf", subject: "mathematics", grade: 7 });
 const lesson = await kwazi.lessons.create({ grade: 7, subject: "mathematics", topic: "Adding fractions", sourceIds: [notes.id] });
 ```
+
+## Limits
+
+| Plan | Keys | Sources | Requests a minute per key | Questions a day per key |
+| --- | --- | --- | --- | --- |
+| Free | 1 | 5 | 10 | 5 (the account has 5 free questions in total) |
+| Kwazi Learner | 3 | 25 | 30 | 60 |
+| Kwazi Family | 5 | 50 | 30 | 200 |
+| Enterprise | 10 | 200 | 60 | 1,000 |
+
+`GET /v1/usage` (`kwazi.usage()`) returns your limits and today's usage. Identical requests are answered from a cache (a day; lessons a week) and still count towards limits.
 
 ## Responsibilities
 

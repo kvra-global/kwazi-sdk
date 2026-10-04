@@ -63,6 +63,16 @@ class KwaziTest {
     }
 
     @Test
+    void readsUsage() {
+        List<Call> calls = new ArrayList<>();
+        Kwazi.Usage usage = client(200, "{\"limits\":{\"tier\":\"free\",\"keys\":1,\"sources\":5,\"perMinute\":10,\"perKeyDaily\":20},"
+                + "\"keyRequestsToday\":3,\"sourcesUsed\":2,\"credits\":{\"kind\":\"unlimited\",\"limit\":null,\"used\":0},\"day\":\"2026-10-04\"}", calls).usage();
+        assertEquals(20, usage.perKeyDaily());
+        assertNull(usage.creditsLimit());
+        assertEquals("GET", calls.get(0).method());
+    }
+
+    @Test
     void refusesBrowserTokens() {
         assertThrows(IllegalArgumentException.class, () -> Kwazi.builder().apiKey("kwz_ws_browser").build());
     }

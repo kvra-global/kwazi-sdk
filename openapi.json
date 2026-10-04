@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Kwazi developer API",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Ground Kwazi's step-by-step tutoring in your own sources. Server calls use a secret key (kwz_sk_…) created under Me → Developer API at https://app.kwazi.kvra.co.za. Browsers use short-lived widget session tokens (kwz_ws_…) minted by your server."
   },
   "servers": [
@@ -169,6 +169,45 @@
             }
           },
           "503": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/usage": {
+      "get": {
+        "summary": "Your plan's limits and today's usage",
+        "description": "Limits by plan — free: 1 key, 5 sources, 10 requests a minute and 5 questions a day per key; Kwazi Learner: 3, 25, 30, 60; Kwazi Family: 5, 50, 30, 200; enterprise: 10, 200, 60, 1000. Questions also spend account credits (a one-off trial on the free plan).",
+        "operationId": "getUsage",
+        "responses": {
+          "200": {
+            "description": "Limits and usage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usage"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
             "description": "Error",
             "content": {
               "application/json": {
@@ -1470,6 +1509,121 @@
                 }
               }
             }
+          }
+        }
+      },
+      "Usage": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "limits",
+          "keyRequestsToday",
+          "sourcesUsed",
+          "credits",
+          "day"
+        ],
+        "properties": {
+          "limits": {
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+              "tier",
+              "keys",
+              "sources",
+              "perMinute",
+              "perKeyDaily"
+            ],
+            "properties": {
+              "tier": {
+                "anyOf": [
+                  {
+                    "const": "free",
+                    "type": "string"
+                  },
+                  {
+                    "const": "learner-monthly",
+                    "type": "string"
+                  },
+                  {
+                    "const": "family-monthly",
+                    "type": "string"
+                  },
+                  {
+                    "const": "enterprise",
+                    "type": "string"
+                  }
+                ]
+              },
+              "keys": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "sources": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "perMinute": {
+                "minimum": 0,
+                "type": "integer"
+              },
+              "perKeyDaily": {
+                "minimum": 0,
+                "type": "integer"
+              }
+            }
+          },
+          "keyRequestsToday": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "sourcesUsed": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "credits": {
+            "additionalProperties": false,
+            "type": "object",
+            "required": [
+              "kind",
+              "limit",
+              "used"
+            ],
+            "properties": {
+              "kind": {
+                "anyOf": [
+                  {
+                    "const": "trial",
+                    "type": "string"
+                  },
+                  {
+                    "const": "daily",
+                    "type": "string"
+                  },
+                  {
+                    "const": "unlimited",
+                    "type": "string"
+                  }
+                ]
+              },
+              "limit": {
+                "anyOf": [
+                  {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "used": {
+                "minimum": 0,
+                "type": "integer"
+              }
+            }
+          },
+          "day": {
+            "type": "string"
           }
         }
       }

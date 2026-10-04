@@ -152,11 +152,15 @@ class Kwazi:
         self.lessons = _Lessons(self)
         self.widget_sessions = _WidgetSessions(self)
 
+    def usage(self) -> Json:
+        """Your plan's limits and what this key has used today."""
+        return self._request("GET", "/v1/usage")
+
     def _request(self, method: str, path: str, body: Optional[Json] = None) -> Any:
         headers = {
             "Authorization": f"Bearer {self._api_key}",
             "Accept": "application/json",
-            "User-Agent": "kwazi-python/0.1.0",
+            "User-Agent": "kwazi-python/0.2.0",
         }
         data = None
         if body is not None:

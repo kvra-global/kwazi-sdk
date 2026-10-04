@@ -45,6 +45,23 @@ export interface WidgetSession {
   subject: string | null;
 }
 
+export interface Limits {
+  tier: "free" | "learner-monthly" | "family-monthly" | "enterprise";
+  keys: number;
+  sources: number;
+  perMinute: number;
+  perKeyDaily: number;
+}
+
+export interface Usage {
+  limits: Limits;
+  keyRequestsToday: number;
+  sourcesUsed: number;
+  /** Account credits: a one-off trial on the free plan, a daily allowance on plans, or unlimited. */
+  credits: { kind: "trial" | "daily" | "unlimited"; limit: number | null; used: number };
+  day: string;
+}
+
 export interface QuestionInput {
   grade: Grade;
   subject: string;
@@ -136,6 +153,11 @@ export class Kwazi {
     create: (input: WidgetSessionInput = {}) => this.request<WidgetSession>("POST", "/v1/widget/sessions", input)
   };
 
+  /** Your plan's limits and what this key has used today. */
+  usage(): Promise<Usage> {
+    return this.request<Usage>("GET", "/v1/usage");
+  }
+
   /** Builds an attachment from bytes, for example a photo of a question. */
   static attachment(bytes: Uint8Array, mediaType: Attachment["mediaType"], name?: string): Attachment {
     return { mediaType, data: Buffer.from(bytes).toString("base64"), ...(name ? { name } : {}) };
@@ -147,7 +169,7 @@ export class Kwazi {
       headers: {
         authorization: `Bearer ${this.apiKey}`,
         accept: "application/json",
-        "user-agent": "kwazi-node/0.1.0",
+        "user-agent": "kwazi-node/0.2.0",
         ...(body !== undefined ? { "content-type": "application/json" } : {})
       },
       ...(body !== undefined ? { body: JSON.stringify(body) } : {}),

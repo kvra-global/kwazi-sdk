@@ -52,6 +52,13 @@ class ClientTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             Kwazi(api_key="kwz_ws_browser")
 
+    def test_usage(self):
+        transport = FakeTransport(200, {"limits": {"tier": "free", "perKeyDaily": 20}, "keyRequestsToday": 3})
+        usage = Kwazi(api_key="kwz_sk_test", transport=transport).usage()
+        self.assertEqual(usage["limits"]["perKeyDaily"], 20)
+        self.assertEqual(transport.requests[0].full_url, "https://api.kwazi.kvra.co.za/v1/usage")
+        self.assertEqual(transport.requests[0].get_method(), "GET")
+
     def test_attachment(self):
         self.assertEqual(attachment(b"\x01\x02\x03", "image/png"), {"mediaType": "image/png", "data": "AQID"})
 

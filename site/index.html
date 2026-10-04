@@ -97,6 +97,7 @@
       <nav>
         <a href="#packages">Packages</a>
         <a class="hide-sm" href="#api">API</a>
+        <a class="hide-sm" href="#limits">Limits</a>
         <a href="https://github.com/kvra-global/kwazi-sdk">GitHub</a>
       </nav>
     </header>
@@ -140,18 +141,18 @@
         <div class="card">
           <div class="pkg-head"><h3>Node.js</h3><span class="tag">Node 18+</span></div>
           <p>Typed client for Node 18+ using the built-in fetch.</p>
-          <pre><code>npm install https://github.com/kvra-global/kwazi-sdk/releases/download/v0.1.0/kwazi-0.1.0.tgz</code></pre>
+          <pre><code>npm install https://github.com/kvra-global/kwazi-sdk/releases/download/v0.2.0/kwazi-0.2.0.tgz</code></pre>
         </div>
         <div class="card">
           <div class="pkg-head"><h3>Python</h3><span class="tag">Python 3.9+</span></div>
           <p>Standard-library client for Python 3.9+.</p>
-          <pre><code>pip install https://github.com/kvra-global/kwazi-sdk/releases/download/v0.1.0/kwazi-0.1.0-py3-none-any.whl</code></pre>
+          <pre><code>pip install https://github.com/kvra-global/kwazi-sdk/releases/download/v0.2.0/kwazi-0.2.0-py3-none-any.whl</code></pre>
         </div>
         <div class="card">
           <div class="pkg-head"><h3>Gradle (Java, Kotlin)</h3><span class="tag">Java 17+</span></div>
           <p>Java 17+ client with no dependencies, for Android back ends and JVM services.</p>
           <pre><code>repositories { maven("https://jitpack.io") }
-dependencies { implementation("com.github.kvra-global:kwazi-sdk:v0.1.0") }</code></pre>
+dependencies { implementation("com.github.kvra-global:kwazi-sdk:v0.2.0") }</code></pre>
         </div>
       </div>
     </section>
@@ -244,6 +245,7 @@ curl https://api.kwazi.kvra.co.za/v1/questions \
             <tr><td><code>DELETE /v1/sources/{id}</code></td><td>secret key</td><td>Delete a source and Kwazi's copy of it.</td></tr>
             <tr><td><code>POST /v1/questions</code></td><td>secret key</td><td>Ask a typed question and/or attach up to three photos or PDFs, grounded in up to three sources.</td></tr>
             <tr><td><code>POST /v1/lessons</code></td><td>secret key</td><td>A focused lesson on one topic: worked example, steps and a practice question.</td></tr>
+            <tr><td><code>GET /v1/usage</code></td><td>secret key</td><td>Your plan's limits and what this key has used today.</td></tr>
             <tr><td><code>POST /v1/widget/sessions</code></td><td>secret key</td><td>Mint a widget token (1 minute to 24 hours) that fixes the sources, grade and subject.</td></tr>
             <tr><td><code>POST /v1/widget/questions</code></td><td>widget token</td><td>Used by the widget; open to any origin, no cookies.</td></tr>
           </tbody>
@@ -251,12 +253,28 @@ curl https://api.kwazi.kvra.co.za/v1/questions \
       </div>
     </section>
 
+    <section id="limits" class="reveal">
+      <h2>Limits</h2>
+      <p class="sub">Limits follow the plan of the account that owns the key. Widget sessions count against their key. Check where you stand any time with <code>GET /v1/usage</code> (<code>kwazi.usage()</code>). Over a limit you get HTTP 429 (or 409 for keys and sources) with a <code>message</code> you can show, and a <code>Retry-After</code> header for per-minute limits.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Plan</th><th>Keys</th><th>Sources</th><th>Requests a minute per key</th><th>Questions a day per key</th></tr></thead>
+          <tbody>
+            <tr><td><b>Free</b></td><td>1</td><td>5</td><td>10</td><td>5 (the account has 5 free questions in total)</td></tr>
+            <tr><td>Kwazi Learner</td><td>3</td><td>25</td><td>30</td><td>60</td></tr>
+            <tr><td>Kwazi Family</td><td>5</td><td>50</td><td>30</td><td>200</td></tr>
+            <tr><td>Enterprise</td><td>10</td><td>200</td><td>60</td><td>1,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="sub" style="margin-top:16px">Identical requests (same question, grade, subject and sources) are answered from a cache for a day, and lessons for a week, so popular lessons come back instantly. The <code>x-kwazi-cache</code> response header says <code>hit</code> or <code>miss</code>. Cached answers still count towards your limits.</p>
+    </section>
+
     <section class="reveal">
       <h2>Good to know</h2>
       <ul class="points">
         <li><b>Safety first.</b> Every answer is checked against a strict schema and moderated before it is returned. Unsafe questions get a calm safety reply, never model output.</li>
-        <li><b>Credits.</b> Questions and lessons use the credits of the account that owns the key: free trial credits, a Kwazi plan, or your own OpenAI key added under <b>Me → Settings</b>.</li>
-        <li><b>Limits.</b> 60 questions or lessons a minute per key and 20 a minute per widget session. Errors come back as JSON with a <code>message</code> you can show.</li>
+        <li><b>Credits.</b> Questions and lessons use the credits of the account that owns the key: 5 free questions to try, a Kwazi plan, or your own OpenAI key added under <b>Me → Settings</b>.</li>
         <li><b>Your learners.</b> You are responsible for having consent to send your learners' questions to Kwazi, including a parent or guardian's consent for children, under POPIA. Do not put learners' personal details in questions or sources.</li>
         <li><b>Keys.</b> Keep <code>kwz_sk_</code> keys on your server. If one leaks, revoke it under <b>Me → Developer API</b>; its widget sessions stop at once.</li>
       </ul>

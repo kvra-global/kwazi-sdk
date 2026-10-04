@@ -45,3 +45,12 @@ test("refuses a missing or non-secret key", () => {
 test("builds attachments from bytes", () => {
   assert.deepEqual(Kwazi.attachment(new Uint8Array([1, 2, 3]), "image/png"), { mediaType: "image/png", data: "AQID" });
 });
+
+test("reads usage and limits", async () => {
+  const seen = [];
+  const kwazi = new Kwazi({ apiKey: "kwz_sk_test", fetch: fakeFetch(200, { limits: { tier: "free", perKeyDaily: 20 }, keyRequestsToday: 3 }, seen) });
+  const usage = await kwazi.usage();
+  assert.equal(usage.limits.perKeyDaily, 20);
+  assert.equal(seen[0].url, "https://api.kwazi.kvra.co.za/v1/usage");
+  assert.equal(seen[0].init.method, "GET");
+});
