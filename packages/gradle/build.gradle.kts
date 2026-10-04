@@ -3,7 +3,7 @@ plugins {
     `maven-publish`
 }
 
-// JitPack builds tagged commits and serves them as com.github.kvra-global.kwazi-sdk:kwazi:<tag>.
+// JitPack builds tagged commits and serves them as com.github.kvra-global:kwazi-sdk:<tag>.
 val jitpack = System.getenv("JITPACK") == "true"
 group = if (jitpack) "${System.getenv("GROUP")}.${System.getenv("ARTIFACT")}" else "za.co.kvra"
 version = if (jitpack) System.getenv("VERSION") else "0.1.0"
