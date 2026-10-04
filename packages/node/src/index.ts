@@ -169,7 +169,7 @@ export class Kwazi {
       headers: {
         authorization: `Bearer ${this.apiKey}`,
         accept: "application/json",
-        "user-agent": "kwazi-node/0.2.0",
+        "user-agent": "kwazi-node/0.2.1",
         ...(body !== undefined ? { "content-type": "application/json" } : {})
       },
       ...(body !== undefined ? { body: JSON.stringify(body) } : {}),

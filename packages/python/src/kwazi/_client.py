@@ -160,7 +160,7 @@ class Kwazi:
         headers = {
             "Authorization": f"Bearer {self._api_key}",
             "Accept": "application/json",
-            "User-Agent": "kwazi-python/0.2.0",
+            "User-Agent": "kwazi-python/0.2.1",
         }
         data = None
         if body is not None:

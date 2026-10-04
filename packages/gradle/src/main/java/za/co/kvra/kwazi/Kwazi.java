@@ -198,7 +198,7 @@ public final class Kwazi {
         Map<String, String> headers = new LinkedHashMap<>();
         headers.put("Authorization", "Bearer " + apiKey);
         headers.put("Accept", "application/json");
-        headers.put("User-Agent", "kwazi-java/0.2.0");
+        headers.put("User-Agent", "kwazi-java/0.2.1");
         String payload = null;
         if (body != null) {
             headers.put("Content-Type", "application/json");

@@ -1,6 +1,6 @@
 {
   "name": "kwazi-widget",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Kwazi chat widget: an animated, mobile-first tutor for South African learners that teaches from your own sources.",
   "license": "MIT",
   "type": "module",

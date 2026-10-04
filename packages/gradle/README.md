@@ -4,7 +4,7 @@ Kwazi developer API client for Java 17+ with no dependencies.
 
 ```kotlin
 repositories { maven("https://jitpack.io") }
-dependencies { implementation("com.github.kvra-global:kwazi-sdk:v0.2.0") }
+dependencies { implementation("com.github.kvra-global:kwazi-sdk:v0.2.1") }
 ```
 
 ```java

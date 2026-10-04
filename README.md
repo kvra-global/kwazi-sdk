@@ -8,8 +8,8 @@ Bring [Kwazi](https://kwazi.kvra.co.za)'s step-by-step tutoring into your school
 | --- | --- | --- |
 | Chat widget | `npm install kwazi-widget`, or `<script src="https://cdn.jsdelivr.net/npm/kwazi-widget@0.2/dist/kwazi-widget.js">` | [`packages/widget`](packages/widget) |
 | Node.js | `npm install kwazi` | [`packages/node`](packages/node) |
-| Python | `pip install https://github.com/kvra-global/kwazi-sdk/releases/download/v0.2.0/kwazi-0.2.0-py3-none-any.whl` (PyPI `kwazi`) | [`packages/python`](packages/python) |
-| Gradle | `implementation("com.github.kvra-global:kwazi-sdk:v0.2.0")` from JitPack | [`packages/gradle`](packages/gradle) |
+| Python | `pip install https://github.com/kvra-global/kwazi-sdk/releases/download/v0.2.1/kwazi-0.2.1-py3-none-any.whl` (PyPI `kwazi`) | [`packages/python`](packages/python) |
+| Gradle | `implementation("com.github.kvra-global:kwazi-sdk:v0.2.1")` from JitPack | [`packages/gradle`](packages/gradle) |
 
 The API is described in [`openapi.json`](openapi.json), generated from the same contracts the API validates with.
 

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "kwazi"
-version = "0.2.0"
+version = "0.2.1"
 description = "Kwazi developer API client: ground step-by-step tutoring for South African learners in your own sources."
 readme = "README.md"
 license = "MIT"
