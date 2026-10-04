@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Kwazi for developers</title>
+  <meta name="description" content="Bring Kwazi's step-by-step tutoring into your school portal or app, grounded in your own notes, papers and pages. Chat widget, Node, Python and Gradle SDKs.">
+  <meta name="theme-color" content="#0F766E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%230F766E'/%3E%3Ctext x='32' y='44' font-size='36' font-family='Arial' font-weight='900' fill='white' text-anchor='middle'%3EK%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --accent: #0F766E; --accent-soft: #EAF8F5; --ink: #17212B; --soft: #374151; --muted: #64748B;
+      --line: #E2E8F0; --canvas: #F6F8FB; --paper: #FFFFFF; --gold: #FFB547; --code: #0B1220; --code-ink: #E2E8F0;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        --accent: #2DD4BF; --accent-soft: #0F2E2B; --ink: #E5E7EB; --soft: #CBD5E1; --muted: #94A3B8;
+        --line: #1F2937; --canvas: #0B1220; --paper: #111827; --code: #030712;
+      }
+    }
+    :root[data-theme="dark"] {
+      --accent: #2DD4BF; --accent-soft: #0F2E2B; --ink: #E5E7EB; --soft: #CBD5E1; --muted: #94A3B8;
+      --line: #1F2937; --canvas: #0B1220; --paper: #111827; --code: #030712;
+    }
+    * { box-sizing: border-box; }
+    html, body { overflow-x: clip; }
+    body { margin: 0; background: var(--canvas); color: var(--ink); font: 16px/1.55 ui-rounded, "SF Pro Rounded", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    a { color: var(--accent); }
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+    header.top { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 19px; text-decoration: none; color: var(--ink); }
+    .logo { width: 38px; height: 38px; border-radius: 13px; background: #0F766E; color: #fff; display: grid; place-items: center; font-weight: 900; animation: wiggle 5s ease-in-out infinite; }
+    nav a { margin-left: 16px; font-weight: 700; text-decoration: none; color: var(--soft); }
+    nav a:hover { color: var(--accent); }
+    @media (max-width: 600px) { nav a.hide-sm { display: none; } }
+
+    .hero { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 32px; align-items: center; padding: 32px 0 48px; }
+    @media (max-width: 860px) { .hero { grid-template-columns: 1fr; } }
+    .eyebrow { display: inline-block; font-size: 13px; font-weight: 800; color: var(--accent); background: var(--accent-soft); padding: 4px 12px; border-radius: 999px; animation: rise .5s ease both; }
+    h1 { font-size: clamp(32px, 6vw, 54px); line-height: 1.05; margin: 14px 0; letter-spacing: -.02em; animation: rise .6s .05s ease both; }
+    h1 span { color: var(--accent); }
+    .lead { font-size: 18px; color: var(--soft); max-width: 560px; animation: rise .6s .12s ease both; }
+    .cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; animation: rise .6s .2s ease both; }
+    .button { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 999px; font-weight: 800; text-decoration: none; transition: transform .15s ease, box-shadow .15s ease; }
+    .button:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(15, 118, 110, .25); }
+    .button.primary { background: #0F766E; color: #fff; }
+    .button.secondary { border: 1px solid var(--line); color: var(--ink); background: var(--paper); }
+    .demo { height: 600px; border-radius: 28px; overflow: hidden; box-shadow: 0 30px 60px rgba(15, 23, 42, .18); animation: float-in .8s .15s cubic-bezier(.2, 1.2, .4, 1) both; }
+    .demo-note { font-size: 13px; color: var(--muted); text-align: center; margin-top: 8px; }
+
+    section { padding: 40px 0; }
+    h2 { font-size: clamp(24px, 4vw, 34px); margin: 0 0 8px; letter-spacing: -.01em; }
+    .sub { color: var(--soft); margin: 0 0 24px; max-width: 680px; }
+    .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; counter-reset: step; }
+    @media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
+    .card { min-width: 0; background: var(--paper); border: 1px solid var(--line); border-radius: 22px; padding: 20px; transition: transform .2s ease, border-color .2s ease; }
+    .card:hover { transform: translateY(-3px); border-color: var(--accent); }
+    .steps .card::before { counter-increment: step; content: counter(step); display: grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; background: var(--accent-soft); color: var(--accent); font-weight: 900; margin-bottom: 10px; }
+    .card h3 { margin: 0 0 6px; font-size: 18px; }
+    .card p { margin: 0; color: var(--soft); }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s cubic-bezier(.2, 1.2, .4, 1); }
+    .reveal.seen { opacity: 1; transform: none; }
+
+    .packages { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    @media (max-width: 760px) { .packages { grid-template-columns: 1fr; } }
+    .pkg-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+    .tag { font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+    pre { position: relative; margin: 10px 0 0; background: var(--code); color: var(--code-ink); border-radius: 14px; padding: 36px 16px 14px; overflow-x: auto; font: 13.5px/1.55 ui-monospace, Menlo, Consolas, monospace; }
+    pre .copy { position: absolute; top: 8px; right: 8px; font: 700 12px system-ui; color: var(--code-ink); background: rgba(255,255,255,.1); border: 0; border-radius: 8px; padding: 4px 8px; cursor: pointer; opacity: .8; }
+    pre .copy:hover { opacity: 1; }
+    .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 4px; }
+    .tabs button { font: 800 14px system-ui; border: 1px solid var(--line); background: var(--paper); color: var(--soft); padding: 8px 14px; border-radius: 999px; cursor: pointer; transition: all .15s ease; }
+    .tabs button[aria-selected="true"] { background: #0F766E; color: #fff; border-color: #0F766E; }
+    .panel[hidden] { display: none; }
+    .panel { animation: fade .3s ease both; }
+
+    table { width: 100%; border-collapse: collapse; background: var(--paper); border-radius: 18px; overflow: hidden; border: 1px solid var(--line); }
+    th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+    td code { font: 13px ui-monospace, Menlo, monospace; background: var(--canvas); padding: 2px 6px; border-radius: 6px; white-space: nowrap; }
+    .table-wrap { overflow-x: auto; }
+    ul.points { padding-left: 20px; color: var(--soft); }
+    ul.points li { margin: 6px 0; }
+    footer { padding: 40px 0 60px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); margin-top: 40px; }
+
+    @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+    @keyframes float-in { from { opacity: 0; transform: translateY(30px) scale(.97); } to { opacity: 1; transform: none; } }
+    @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes wiggle { 0%, 90%, 100% { rotate: 0deg; } 93% { rotate: -10deg; } 96% { rotate: 10deg; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } .reveal { opacity: 1; transform: none; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <a class="brand" href="./"><span class="logo">K</span> Kwazi for developers</a>
+      <nav>
+        <a href="#packages">Packages</a>
+        <a class="hide-sm" href="#api">API</a>
+        <a href="https://github.com/kvra-global/kwazi-sdk">GitHub</a>
+      </nav>
+    </header>
+
+    <div class="hero">
+      <div>
+        <span class="eyebrow">For schools, publishers and learning apps</span>
+        <h1>Kwazi tutoring, <span>taught from your sources</span>.</h1>
+        <p class="lead">Point Kwazi at your own notes, past papers and web pages. Learners snap or type a question and get grade-appropriate, step-by-step answers and focused lessons that follow your material and South Africa's CAPS curriculum.</p>
+        <div class="cta">
+          <a class="button primary" href="https://app.kwazi.kvra.co.za/">Get an API key</a>
+          <a class="button secondary" href="#quickstart">Quickstart</a>
+        </div>
+      </div>
+      <div>
+        <div class="demo" id="demo"></div>
+        <p class="demo-note">Live widget running on a sample answer. Type anything or tap a step's “Break it down”.</p>
+      </div>
+    </div>
+
+    <section class="reveal">
+      <h2>How it works</h2>
+      <p class="sub">Three steps. Your secret key stays on your server; the browser only ever gets a short-lived session token.</p>
+      <div class="steps">
+        <div class="card"><h3>Create a key</h3><p>Sign in at app.kwazi.kvra.co.za, open <b>Me → Developer API</b> and create a secret key (<code>kwz_sk_…</code>).</p></div>
+        <div class="card"><h3>Register your sources</h3><p>Send public https links to PDFs, web pages or text. Kwazi fetches each once and keeps a copy to teach from.</p></div>
+        <div class="card"><h3>Ask, teach or embed</h3><p>Call the API for answers and focused lessons, or mint a widget session and drop the chat widget into your page.</p></div>
+      </div>
+    </section>
+
+    <section id="packages" class="reveal">
+      <h2>Packages</h2>
+      <p class="sub">Four small packages with no runtime dependencies, all in <a href="https://github.com/kvra-global/kwazi-sdk">one public repository</a>.</p>
+      <div class="packages">
+        <div class="card">
+          <div class="pkg-head"><h3>Chat widget</h3><span class="tag">Web component</span></div>
+          <p>An animated, mobile-first <code>&lt;kwazi-chat&gt;</code> web component: photo questions, steps one at a time, “break it down”, check-yourself and confetti.</p>
+          <pre><code>&lt;script src="https://kvra-global.github.io/kwazi-sdk/widget/kwazi-widget.js" defer&gt;&lt;/script&gt;
+&lt;kwazi-chat session-endpoint="/api/kwazi-session"&gt;&lt;/kwazi-chat&gt;</code></pre>
+        </div>
+        <div class="card">
+          <div class="pkg-head"><h3>Node.js</h3><span class="tag">Node 18+</span></div>
+          <p>Typed client for Node 18+ using the built-in fetch.</p>
+          <pre><code>npm install https://github.com/kvra-global/kwazi-sdk/releases/download/v0.1.0/kwazi-0.1.0.tgz</code></pre>
+        </div>
+        <div class="card">
+          <div class="pkg-head"><h3>Python</h3><span class="tag">Python 3.9+</span></div>
+          <p>Standard-library client for Python 3.9+.</p>
+          <pre><code>pip install https://github.com/kvra-global/kwazi-sdk/releases/download/v0.1.0/kwazi-0.1.0-py3-none-any.whl</code></pre>
+        </div>
+        <div class="card">
+          <div class="pkg-head"><h3>Gradle (Java, Kotlin)</h3><span class="tag">Java 17+</span></div>
+          <p>Java 17+ client with no dependencies, for Android back ends and JVM services.</p>
+          <pre><code>repositories { maven("https://jitpack.io") }
+dependencies { implementation("com.github.kvra-global.kwazi-sdk:kwazi:v0.1.0") }</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="quickstart" class="reveal">
+      <h2>Quickstart</h2>
+      <p class="sub">Register a source, get a focused lesson, and mint a widget session. Set <code>KWAZI_API_KEY</code> first.</p>
+      <div class="tabs" role="tablist">
+        <button role="tab" aria-selected="true" data-tab="node">Node.js</button>
+        <button role="tab" aria-selected="false" data-tab="python">Python</button>
+        <button role="tab" aria-selected="false" data-tab="java">Java</button>
+        <button role="tab" aria-selected="false" data-tab="curl">curl</button>
+        <button role="tab" aria-selected="false" data-tab="widget">Widget</button>
+      </div>
+      <div class="panel" data-panel="node"><pre><code>import { Kwazi } from "kwazi";
+
+const kwazi = new Kwazi(); // reads KWAZI_API_KEY
+
+const notes = await kwazi.sources.create({
+  url: "https://your-school.example/grade-7/fractions.pdf",
+  subject: "mathematics",
+  grade: 7
+});
+
+const lesson = await kwazi.lessons.create({
+  grade: 7, subject: "mathematics", topic: "Adding fractions", sourceIds: [notes.id]
+});
+console.log(lesson.steps.map((step) => step.title), lesson.finalAnswer);
+
+// In your web server: a session for the chat widget
+app.post("/api/kwazi-session", async (req, res) => {
+  const session = await kwazi.widgetSessions.create({ sourceIds: [notes.id], grade: 7, subject: "mathematics" });
+  res.json({ token: session.token });
+});</code></pre></div>
+      <div class="panel" data-panel="python" hidden><pre><code>from kwazi import Kwazi
+
+kwazi = Kwazi()  # reads KWAZI_API_KEY
+
+notes = kwazi.sources.create("https://your-school.example/grade-7/fractions.pdf", subject="mathematics", grade=7)
+lesson = kwazi.lessons.create(7, "mathematics", "Adding fractions", source_ids=[notes["id"]])
+print([step["title"] for step in lesson["steps"]], lesson["finalAnswer"])
+
+session = kwazi.widget_sessions.create(source_ids=[notes["id"]], grade=7, subject="mathematics")
+# return {"token": session["token"]} from your /api/kwazi-session route</code></pre></div>
+      <div class="panel" data-panel="java" hidden><pre><code>import za.co.kvra.kwazi.Kwazi;
+import java.util.List;
+
+Kwazi kwazi = Kwazi.builder().build(); // reads KWAZI_API_KEY
+
+Kwazi.Source notes = kwazi.createSource(
+    new Kwazi.SourceInput("https://your-school.example/grade-7/fractions.pdf").subject("mathematics").grade(7));
+Kwazi.Answer lesson = kwazi.createLesson(
+    new Kwazi.LessonInput(7, "mathematics", "Adding fractions").sourceIds(List.of(notes.id())));
+System.out.println(lesson.finalAnswer());
+
+Kwazi.WidgetSession session = kwazi.createWidgetSession(
+    new Kwazi.WidgetSessionInput().sourceIds(List.of(notes.id())).grade(7).subject("mathematics"));</code></pre></div>
+      <div class="panel" data-panel="curl" hidden><pre><code>curl https://api.kwazi.kvra.co.za/v1/sources \
+  -H "Authorization: Bearer $KWAZI_API_KEY" -H "Content-Type: application/json" \
+  -d '{"url":"https://your-school.example/grade-7/fractions.pdf","subject":"mathematics","grade":7}'
+
+curl https://api.kwazi.kvra.co.za/v1/questions \
+  -H "Authorization: Bearer $KWAZI_API_KEY" -H "Content-Type: application/json" \
+  -d '{"grade":7,"subject":"mathematics","question":"What is 1/2 + 1/4?","sourceIds":["SOURCE_ID"]}'</code></pre></div>
+      <div class="panel" data-panel="widget" hidden><pre><code>&lt;!-- Floating launcher; your /api/kwazi-session route returns {"token": "kwz_ws_…"} --&gt;
+&lt;script src="https://kvra-global.github.io/kwazi-sdk/widget/kwazi-widget.js" defer&gt;&lt;/script&gt;
+&lt;kwazi-chat session-endpoint="/api/kwazi-session" heading="Ask Kwazi" accent="#0F766E"&gt;&lt;/kwazi-chat&gt;
+
+&lt;!-- Or inline, from your own bundle --&gt;
+&lt;div id="tutor" style="height:600px"&gt;&lt;/div&gt;
+&lt;script type="module"&gt;
+  import { mount } from "kwazi-widget";
+  mount({
+    target: document.getElementById("tutor"),
+    inline: true,
+    getToken: async () =&gt; (await (await fetch("/api/kwazi-session", { method: "POST" })).json()).token
+  });
+&lt;/script&gt;</code></pre></div>
+    </section>
+
+    <section id="api" class="reveal">
+      <h2>API</h2>
+      <p class="sub">Base URL <code>https://api.kwazi.kvra.co.za</code>. Full schema: <a href="openapi.json">openapi.json</a> (OpenAPI 3.1, generated from the same contracts the API validates with).</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Call</th><th>Auth</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>POST /v1/sources</code></td><td>secret key</td><td>Register a public https PDF (up to 6 MB), web page or text file. Kwazi fetches it once; failures are saved with a reason.</td></tr>
+            <tr><td><code>GET /v1/sources</code></td><td>secret key</td><td>List your sources (up to 200 per account).</td></tr>
+            <tr><td><code>DELETE /v1/sources/{id}</code></td><td>secret key</td><td>Delete a source and Kwazi's copy of it.</td></tr>
+            <tr><td><code>POST /v1/questions</code></td><td>secret key</td><td>Ask a typed question and/or attach up to three photos or PDFs, grounded in up to three sources.</td></tr>
+            <tr><td><code>POST /v1/lessons</code></td><td>secret key</td><td>A focused lesson on one topic: worked example, steps and a practice question.</td></tr>
+            <tr><td><code>POST /v1/widget/sessions</code></td><td>secret key</td><td>Mint a widget token (1 minute to 24 hours) that fixes the sources, grade and subject.</td></tr>
+            <tr><td><code>POST /v1/widget/questions</code></td><td>widget token</td><td>Used by the widget; open to any origin, no cookies.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="reveal">
+      <h2>Good to know</h2>
+      <ul class="points">
+        <li><b>Safety first.</b> Every answer is checked against a strict schema and moderated before it is returned. Unsafe questions get a calm safety reply, never model output.</li>
+        <li><b>Credits.</b> Questions and lessons use the credits of the account that owns the key: free trial credits, a Kwazi plan, or your own OpenAI key added under <b>Me → Settings</b>.</li>
+        <li><b>Limits.</b> 60 questions or lessons a minute per key and 20 a minute per widget session. Errors come back as JSON with a <code>message</code> you can show.</li>
+        <li><b>Your learners.</b> You are responsible for having consent to send your learners' questions to Kwazi, including a parent or guardian's consent for children, under POPIA. Do not put learners' personal details in questions or sources.</li>
+        <li><b>Keys.</b> Keep <code>kwz_sk_</code> keys on your server. If one leaks, revoke it under <b>Me → Developer API</b>; its widget sessions stop at once.</li>
+      </ul>
+    </section>
+
+    <footer>
+      Kwazi Learning by Kivora · <a href="https://kwazi.kvra.co.za/privacy">Privacy</a> · <a href="https://kwazi.kvra.co.za/terms">Terms</a> · SDKs released under the MIT licence.
+    </footer>
+  </div>
+
+  <script>
+    // Demo only: answers come from a fixed sample, never the live API.
+    const sample = {
+      answerId: "demo", understoodQuestion: "Work out 1/2 + 1/4.", topic: "Adding fractions",
+      steps: [
+        { title: "Make the bottoms the same", explanation: "You can only add fractions when the denominators match. 4 is a multiple of 2, so change 1/2 into quarters.", math: "1/2 = 2/4" },
+        { title: "Add the tops", explanation: "Now both fractions are quarters, so add the numerators and keep the denominator.", math: "2/4 + 1/4 = 3/4" },
+        { title: "Check it makes sense", explanation: "Half a pizza plus a quarter is three of the four slices.", math: "" }
+      ],
+      finalAnswer: "1/2 + 1/4 = 3/4",
+      checkYourself: { prompt: "What is 1/3 + 1/6?", choices: ["2/9", "1/2", "2/6"], correctIndex: 1 },
+      followUps: ["Why must the denominators match?", "How do I add 2/3 + 1/4?"],
+      citations: [], confidence: "high", model: "demo", safety: { allowed: true, categories: [] }
+    };
+    const smaller = {
+      ...sample, understoodQuestion: "Changing 1/2 into quarters", checkYourself: null, followUps: [],
+      steps: [
+        { title: "Find what turns 2 into 4", explanation: "2 × 2 = 4, so multiply by 2.", math: "2 × 2 = 4" },
+        { title: "Do the same to the top", explanation: "Whatever you do to the bottom, do to the top.", math: "1 × 2 = 2, so 1/2 = 2/4" }
+      ]
+    };
+    const realFetch = window.fetch.bind(window);
+    window.fetch = async (input, init) => {
+      const url = String(input);
+      if (!url.startsWith("https://demo.kwazi.invalid/")) return realFetch(input, init);
+      await new Promise((resolve) => setTimeout(resolve, url.endsWith("/session") ? 150 : 1800));
+      if (url.endsWith("/v1/widget/session")) {
+        return new Response(JSON.stringify({ expiresAt: "2099-01-01T00:00:00Z", sources: [{ id: "1", title: "Grade 7 fractions notes" }], grade: "7", subject: "mathematics" }));
+      }
+      const body = JSON.parse(init.body);
+      return new Response(JSON.stringify(body.purpose === "breakdown" ? smaller : sample));
+    };
+  </script>
+  <script src="widget/kwazi-widget.js"></script>
+  <script>
+    KwaziWidget.mount({ target: document.getElementById("demo"), inline: true, apiBase: "https://demo.kwazi.invalid", getToken: async () => "kwz_ws_demo", title: "Ask Kwazi" });
+
+    for (const tab of document.querySelectorAll("[data-tab]")) {
+      tab.addEventListener("click", () => {
+        for (const other of document.querySelectorAll("[data-tab]")) other.setAttribute("aria-selected", String(other === tab));
+        for (const panel of document.querySelectorAll("[data-panel]")) panel.hidden = panel.dataset.panel !== tab.dataset.tab;
+      });
+    }
+    for (const pre of document.querySelectorAll("pre")) {
+      const copy = document.createElement("button");
+      copy.className = "copy";
+      copy.type = "button";
+      copy.textContent = "Copy";
+      copy.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(pre.querySelector("code").textContent);
+          copy.textContent = "Copied";
+          setTimeout(() => (copy.textContent = "Copy"), 1500);
+        } catch {
+          copy.textContent = "Select to copy";
+        }
+      });
+      pre.append(copy);
+    }
+    const observer = new IntersectionObserver((entries) => {
+      for (const entry of entries) if (entry.isIntersecting) { entry.target.classList.add("seen"); observer.unobserve(entry.target); }
+    }, { threshold: 0.12 });
+    for (const node of document.querySelectorAll(".reveal")) observer.observe(node);
+  </script>
+</body>
+</html>

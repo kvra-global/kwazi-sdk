@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "kwazi"
+version = "0.1.0"
+description = "Kwazi developer API client: ground step-by-step tutoring for South African learners in your own sources."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.9"
+dependencies = []
+keywords = ["kwazi", "tutor", "education", "south-africa", "caps", "ai"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+  "Topic :: Education",
+  "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://kvra-global.github.io/kwazi-sdk/"
+Source = "https://github.com/kvra-global/kwazi-sdk"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kwazi"]

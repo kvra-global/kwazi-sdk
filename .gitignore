@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+.gradle/
+__pycache__/
+*.egg-info/
+.venv/
+_site/
+*.tgz
+.DS_Store

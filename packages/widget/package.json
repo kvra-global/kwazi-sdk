@@ -1,0 +1,30 @@
+{
+  "name": "kwazi-widget",
+  "version": "0.1.0",
+  "description": "Kwazi chat widget: an animated, mobile-first tutor for South African learners that teaches from your own sources.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/kwazi-widget.js",
+  "jsdelivr": "./dist/kwazi-widget.js",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+    "./standalone": "./dist/kwazi-widget.js"
+  },
+  "files": ["dist", "README.md"],
+  "sideEffects": true,
+  "repository": { "type": "git", "url": "git+https://github.com/kvra-global/kwazi-sdk.git", "directory": "packages/widget" },
+  "homepage": "https://kvra-global.github.io/kwazi-sdk/",
+  "keywords": ["kwazi", "chat", "widget", "tutor", "web-component", "education"],
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --format=esm --target=es2020 --outfile=dist/index.js && esbuild src/index.ts --bundle --format=iife --global-name=KwaziWidget --minify --target=es2020 --outfile=dist/kwazi-widget.js && tsc -p tsconfig.json",
+    "test": "npm run build && node --test test/*.test.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.10",
+    "happy-dom": "^20.0.0",
+    "typescript": "^5.9.3"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "kwazi",
+  "version": "0.1.0",
+  "description": "Kwazi developer API client: ground step-by-step tutoring for South African learners in your own sources.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": { ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" } },
+  "files": ["dist", "README.md"],
+  "engines": { "node": ">=18.17" },
+  "repository": { "type": "git", "url": "git+https://github.com/kvra-global/kwazi-sdk.git", "directory": "packages/node" },
+  "homepage": "https://kvra-global.github.io/kwazi-sdk/",
+  "keywords": ["kwazi", "tutor", "education", "south-africa", "caps", "ai"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test test/*.test.js"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.9.3"
+  }
+}

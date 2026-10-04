@@ -1,0 +1,1478 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Kwazi developer API",
+    "version": "1.0.0",
+    "description": "Ground Kwazi's step-by-step tutoring in your own sources. Server calls use a secret key (kwz_sk_…) created under Me → Developer API at https://app.kwazi.kvra.co.za. Browsers use short-lived widget session tokens (kwz_ws_…) minted by your server."
+  },
+  "servers": [
+    {
+      "url": "https://api.kwazi.kvra.co.za"
+    }
+  ],
+  "security": [
+    {
+      "secretKey": []
+    }
+  ],
+  "paths": {
+    "/v1/sources": {
+      "get": {
+        "summary": "List your sources",
+        "operationId": "listSources",
+        "responses": {
+          "200": {
+            "description": "Sources",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Register and ingest a source",
+        "description": "Kwazi fetches the public https URL once (PDF up to 6 MB, an HTML page or plain text) and keeps a copy for grounding. A source that cannot be fetched is saved with status \"failed\" and an error.",
+        "operationId": "createSource",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SourceRegister"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The ingested source",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Source"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/sources/{sourceId}": {
+      "delete": {
+        "summary": "Delete a source",
+        "operationId": "deleteSource",
+        "parameters": [
+          {
+            "name": "sourceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Deleted"
+          },
+          "404": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/questions": {
+      "post": {
+        "summary": "Ask a question",
+        "description": "A typed question and/or up to three photos or PDFs (base64), optionally grounded in up to three of your sources.",
+        "operationId": "askQuestion",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Question"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A validated step-by-step answer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Answer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/lessons": {
+      "post": {
+        "summary": "Get a focused lesson on a topic",
+        "operationId": "createLesson",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LessonRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A short lesson with a worked example and a practice question",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Answer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/widget/sessions": {
+      "post": {
+        "summary": "Mint a widget session",
+        "description": "Call from your server, then hand the token to the chat widget. The session fixes the sources, grade and subject.",
+        "operationId": "createWidgetSession",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WidgetSessionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Session",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WidgetSession"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/widget/session": {
+      "get": {
+        "summary": "Describe the current widget session",
+        "operationId": "getWidgetSession",
+        "security": [
+          {
+            "widgetToken": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Session without its token"
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/widget/questions": {
+      "post": {
+        "summary": "Ask from the widget",
+        "operationId": "askFromWidget",
+        "security": [
+          {
+            "widgetToken": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WidgetQuestion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Answer",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Answer"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "secretKey": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "kwz_sk_… — server side only"
+      },
+      "widgetToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "kwz_ws_… — short-lived, safe in browsers"
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "statusCode": {
+            "type": "integer"
+          }
+        }
+      },
+      "SourceRegister": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "pattern": "^https://",
+            "maxLength": 1000,
+            "type": "string"
+          },
+          "title": {
+            "minLength": 1,
+            "maxLength": 240,
+            "type": "string"
+          },
+          "subject": {
+            "minLength": 2,
+            "maxLength": 64,
+            "type": "string"
+          },
+          "grade": {
+            "anyOf": [
+              {
+                "const": "R",
+                "type": "string"
+              },
+              {
+                "minimum": 1,
+                "maximum": 12,
+                "type": "integer"
+              }
+            ]
+          }
+        }
+      },
+      "Source": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "url",
+          "title",
+          "subject",
+          "grade",
+          "mediaType",
+          "bytes",
+          "status",
+          "error",
+          "createdAt"
+        ],
+        "properties": {
+          "id": {
+            "minLength": 1,
+            "maxLength": 64,
+            "type": "string"
+          },
+          "url": {
+            "maxLength": 1000,
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 240,
+            "type": "string"
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "grade": {
+            "anyOf": [
+              {
+                "maxLength": 2,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mediaType": {
+            "anyOf": [
+              {
+                "const": "application/pdf",
+                "type": "string"
+              },
+              {
+                "const": "text/plain",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "bytes": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "const": "ready",
+                "type": "string"
+              },
+              {
+                "const": "failed",
+                "type": "string"
+              }
+            ]
+          },
+          "error": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          }
+        }
+      },
+      "SourceList": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "sources"
+        ],
+        "properties": {
+          "sources": {
+            "type": "array",
+            "items": {
+              "additionalProperties": false,
+              "type": "object",
+              "required": [
+                "id",
+                "url",
+                "title",
+                "subject",
+                "grade",
+                "mediaType",
+                "bytes",
+                "status",
+                "error",
+                "createdAt"
+              ],
+              "properties": {
+                "id": {
+                  "minLength": 1,
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                "url": {
+                  "maxLength": 1000,
+                  "type": "string"
+                },
+                "title": {
+                  "maxLength": 240,
+                  "type": "string"
+                },
+                "subject": {
+                  "anyOf": [
+                    {
+                      "maxLength": 64,
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "grade": {
+                  "anyOf": [
+                    {
+                      "maxLength": 2,
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "mediaType": {
+                  "anyOf": [
+                    {
+                      "const": "application/pdf",
+                      "type": "string"
+                    },
+                    {
+                      "const": "text/plain",
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "bytes": {
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "status": {
+                  "anyOf": [
+                    {
+                      "const": "ready",
+                      "type": "string"
+                    },
+                    {
+                      "const": "failed",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "maxLength": 200,
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "format": "date-time",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Question": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "grade",
+          "subject",
+          "question"
+        ],
+        "properties": {
+          "grade": {
+            "anyOf": [
+              {
+                "const": "R",
+                "type": "string"
+              },
+              {
+                "minimum": 1,
+                "maximum": 12,
+                "type": "integer"
+              }
+            ]
+          },
+          "subject": {
+            "minLength": 2,
+            "maxLength": 64,
+            "type": "string"
+          },
+          "question": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "purpose": {
+            "anyOf": [
+              {
+                "const": "question",
+                "type": "string"
+              },
+              {
+                "const": "breakdown",
+                "type": "string"
+              },
+              {
+                "const": "practice",
+                "type": "string"
+              }
+            ]
+          },
+          "depth": {
+            "anyOf": [
+              {
+                "const": "quick",
+                "type": "string"
+              },
+              {
+                "const": "thorough",
+                "type": "string"
+              }
+            ]
+          },
+          "attachments": {
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "additionalProperties": false,
+              "type": "object",
+              "required": [
+                "mediaType",
+                "data"
+              ],
+              "properties": {
+                "mediaType": {
+                  "anyOf": [
+                    {
+                      "const": "image/jpeg",
+                      "type": "string"
+                    },
+                    {
+                      "const": "image/png",
+                      "type": "string"
+                    },
+                    {
+                      "const": "image/webp",
+                      "type": "string"
+                    },
+                    {
+                      "const": "application/pdf",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "data": {
+                  "minLength": 16,
+                  "maxLength": 8388608,
+                  "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+                  "type": "string"
+                },
+                "name": {
+                  "maxLength": 120,
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "sourceIds": {
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "minLength": 1,
+              "maxLength": 64,
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LessonRequest": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "grade",
+          "subject",
+          "topic"
+        ],
+        "properties": {
+          "grade": {
+            "anyOf": [
+              {
+                "const": "R",
+                "type": "string"
+              },
+              {
+                "minimum": 1,
+                "maximum": 12,
+                "type": "integer"
+              }
+            ]
+          },
+          "subject": {
+            "minLength": 2,
+            "maxLength": 64,
+            "type": "string"
+          },
+          "topic": {
+            "minLength": 2,
+            "maxLength": 120,
+            "type": "string"
+          },
+          "sourceIds": {
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "minLength": 1,
+              "maxLength": 64,
+              "type": "string"
+            }
+          },
+          "depth": {
+            "anyOf": [
+              {
+                "const": "quick",
+                "type": "string"
+              },
+              {
+                "const": "thorough",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      },
+      "WidgetSessionRequest": {
+        "additionalProperties": false,
+        "type": "object",
+        "properties": {
+          "sourceIds": {
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "minLength": 1,
+              "maxLength": 64,
+              "type": "string"
+            }
+          },
+          "grade": {
+            "anyOf": [
+              {
+                "const": "R",
+                "type": "string"
+              },
+              {
+                "minimum": 1,
+                "maximum": 12,
+                "type": "integer"
+              }
+            ]
+          },
+          "subject": {
+            "minLength": 2,
+            "maxLength": 64,
+            "type": "string"
+          },
+          "ttlSeconds": {
+            "minimum": 60,
+            "maximum": 86400,
+            "type": "integer"
+          }
+        }
+      },
+      "WidgetSession": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "token",
+          "expiresAt",
+          "sources",
+          "grade",
+          "subject"
+        ],
+        "properties": {
+          "token": {
+            "minLength": 32,
+            "maxLength": 128,
+            "type": "string"
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "additionalProperties": false,
+              "type": "object",
+              "required": [
+                "id",
+                "title"
+              ],
+              "properties": {
+                "id": {
+                  "minLength": 1,
+                  "maxLength": 64,
+                  "type": "string"
+                },
+                "title": {
+                  "maxLength": 240,
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "grade": {
+            "anyOf": [
+              {
+                "maxLength": 2,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "WidgetQuestion": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "grade",
+          "subject",
+          "question",
+          "inputMode",
+          "attachments"
+        ],
+        "properties": {
+          "grade": {
+            "anyOf": [
+              {
+                "const": "R",
+                "type": "string"
+              },
+              {
+                "minimum": 1,
+                "maximum": 12,
+                "type": "integer"
+              }
+            ]
+          },
+          "subject": {
+            "minLength": 2,
+            "maxLength": 64,
+            "type": "string"
+          },
+          "question": {
+            "maxLength": 2000,
+            "type": "string"
+          },
+          "inputMode": {
+            "anyOf": [
+              {
+                "const": "text",
+                "type": "string"
+              },
+              {
+                "const": "voice",
+                "type": "string"
+              },
+              {
+                "const": "photo",
+                "type": "string"
+              },
+              {
+                "const": "upload",
+                "type": "string"
+              }
+            ]
+          },
+          "attachments": {
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "additionalProperties": false,
+              "type": "object",
+              "required": [
+                "mediaType",
+                "data"
+              ],
+              "properties": {
+                "mediaType": {
+                  "anyOf": [
+                    {
+                      "const": "image/jpeg",
+                      "type": "string"
+                    },
+                    {
+                      "const": "image/png",
+                      "type": "string"
+                    },
+                    {
+                      "const": "image/webp",
+                      "type": "string"
+                    },
+                    {
+                      "const": "application/pdf",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "data": {
+                  "minLength": 16,
+                  "maxLength": 8388608,
+                  "pattern": "^[A-Za-z0-9+/]+={0,2}$",
+                  "type": "string"
+                },
+                "name": {
+                  "maxLength": 120,
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "purpose": {
+            "anyOf": [
+              {
+                "const": "question",
+                "type": "string"
+              },
+              {
+                "const": "breakdown",
+                "type": "string"
+              },
+              {
+                "const": "practice",
+                "type": "string"
+              }
+            ]
+          },
+          "depth": {
+            "anyOf": [
+              {
+                "const": "quick",
+                "type": "string"
+              },
+              {
+                "const": "thorough",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      },
+      "Answer": {
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "answerId",
+          "understoodQuestion",
+          "topic",
+          "steps",
+          "finalAnswer",
+          "checkYourself",
+          "followUps",
+          "citations",
+          "confidence",
+          "model",
+          "safety"
+        ],
+        "properties": {
+          "answerId": {
+            "type": "string"
+          },
+          "understoodQuestion": {
+            "minLength": 1,
+            "maxLength": 1000,
+            "type": "string"
+          },
+          "topic": {
+            "minLength": 1,
+            "maxLength": 120,
+            "type": "string"
+          },
+          "steps": {
+            "minItems": 1,
+            "maxItems": 8,
+            "type": "array",
+            "items": {
+              "additionalProperties": false,
+              "type": "object",
+              "required": [
+                "title",
+                "explanation",
+                "math"
+              ],
+              "properties": {
+                "title": {
+                  "minLength": 1,
+                  "maxLength": 100,
+                  "type": "string"
+                },
+                "explanation": {
+                  "minLength": 1,
+                  "maxLength": 700,
+                  "type": "string"
+                },
+                "math": {
+                  "maxLength": 240,
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "finalAnswer": {
+            "minLength": 1,
+            "maxLength": 400,
+            "type": "string"
+          },
+          "checkYourself": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "type": "object",
+                "required": [
+                  "prompt",
+                  "choices",
+                  "correctIndex"
+                ],
+                "properties": {
+                  "prompt": {
+                    "minLength": 1,
+                    "maxLength": 240,
+                    "type": "string"
+                  },
+                  "choices": {
+                    "minItems": 2,
+                    "maxItems": 4,
+                    "type": "array",
+                    "items": {
+                      "minLength": 1,
+                      "maxLength": 120,
+                      "type": "string"
+                    }
+                  },
+                  "correctIndex": {
+                    "minimum": 0,
+                    "maximum": 3,
+                    "type": "integer"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "followUps": {
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "minLength": 1,
+              "maxLength": 140,
+              "type": "string"
+            }
+          },
+          "citations": {
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "additionalProperties": false,
+              "type": "object",
+              "required": [
+                "title",
+                "url",
+                "kind"
+              ],
+              "properties": {
+                "title": {
+                  "minLength": 1,
+                  "maxLength": 200,
+                  "type": "string"
+                },
+                "url": {
+                  "pattern": "^https://",
+                  "maxLength": 1000,
+                  "type": "string"
+                },
+                "kind": {
+                  "anyOf": [
+                    {
+                      "const": "textbook",
+                      "type": "string"
+                    },
+                    {
+                      "const": "past-paper",
+                      "type": "string"
+                    },
+                    {
+                      "const": "memo",
+                      "type": "string"
+                    },
+                    {
+                      "const": "curriculum",
+                      "type": "string"
+                    },
+                    {
+                      "const": "web",
+                      "type": "string"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "const": "high",
+                "type": "string"
+              },
+              {
+                "const": "medium",
+                "type": "string"
+              },
+              {
+                "const": "low",
+                "type": "string"
+              }
+            ]
+          },
+          "model": {
+            "type": "string"
+          },
+          "safety": {
+            "type": "object",
+            "required": [
+              "allowed",
+              "categories"
+            ],
+            "properties": {
+              "allowed": {
+                "type": "boolean"
+              },
+              "categories": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
