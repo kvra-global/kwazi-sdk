@@ -4,8 +4,12 @@ An animated, mobile-first Kwazi tutor as a `<kwazi-chat>` web component. Learner
 
 The widget never holds your secret key. Your server mints a short-lived session with a `kwz_sk_` key and the widget uses that token.
 
+```sh
+npm install kwazi-widget
+```
+
 ```html
-<script src="https://kvra-global.github.io/kwazi-sdk/widget/kwazi-widget.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/kwazi-widget@0.2/dist/kwazi-widget.js" defer></script>
 <kwazi-chat session-endpoint="/api/kwazi-session" heading="Ask Kwazi" accent="#0F766E"></kwazi-chat>
 ```
 
